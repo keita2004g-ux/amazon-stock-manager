@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Stock Manager</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF9900">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .amazon-orange { background-color: #FF9900; }
+        .amazon-dark { background-color: #232F3E; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-20">
+
+    <header class="amazon-dark text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-lg font-bold flex items-center">📦 在庫マネ</h1>
+            <div class="text-xs">
+                ID: <input type="text" id="assocId" value="your-tag-22" class="bg-gray-700 border-none text-white px-2 py-1 rounded w-24 focus:ring-1 focus:ring-orange-400">
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white p-5 rounded-xl shadow-sm mb-6 border border-gray-200">
+            <h2 class="text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider">定期購入品を登録</h2>
+            <div class="space-y-3">
+                <input type="text" id="itemName" placeholder="商品名（例：炭酸水）" class="w-full border p-3 rounded-lg text-sm focus:outline-none focus:border-orange-400">
+                <input type="text" id="asin" placeholder="Amazon URL または ASIN" class="w-full border p-3 rounded-lg text-sm focus:outline-none focus:border-orange-400">
+                <div class="flex gap-2">
+                    <input type="number" id="cycle" placeholder="サイクル（日）" class="w-1/2 border p-3 rounded-lg text-sm focus:outline-none focus:border-orange-400">
+                    <button onclick="addItem()" class="w-1/2 amazon-orange text-white font-bold py-3 rounded-lg shadow-sm hover:opacity-90 transition active:scale-95">追加する</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="itemList" class="grid gap-4 grid-cols-1 sm:grid-cols-2">
+            </div>
+    </main>
+
+    <footer class="text-center p-6 text-gray-400 text-xs">
+        © 2026 Amazon Stock Manager<br>
+        Amazonアソシエイト・プログラムの参加者として適格販売により収入を得ています。
+    </footer>
+
+    <script>
+        let items = JSON.parse(localStorage.getItem('amazonStocks')) || [];
+        const assocInput = document.getElementById('assocId');
+
+        // IDの保存
+        assocInput.addEventListener('change', (e) => localStorage.setItem('myAssocTag', e.target.value));
+        if(localStorage.getItem('myAssocTag')) assocInput.value = localStorage.getItem('myAssocTag');
+
+        function save() {
+            localStorage.setItem('amazonStocks', JSON.stringify(items));
+            render();
+        }
+
+        function extractASIN(input) {
+            const match = input.match(/\/(?:dp|gp\/product)\/([A-Z0-9]{10})/);
+            return match ? match[1] : input.trim().toUpperCase();
+        }
+
+        function addItem() {
+            const name = document.getElementById('itemName').value;
+            const rawAsin = document.getElementById('asin').value;
+            const cycle = document.getElementById('cycle').value;
+            const asin = extractASIN(rawAsin);
+
+            if (!name || !asin) return alert('商品名とASINを入力してください');
+
+            items.push({
+                id: Date.now(),
+                name: name,
+                asin: asin,
+                cycle: parseInt(cycle) || 30,
+                lastBought: new Date().toLocaleDateString()
+            });
+            save();
+            document.getElementById('itemName').value = '';
+            document.getElementById('asin').value = '';
+        }
+
+        function deleteItem(id) {
+            if(confirm('削除しますか？')) {
+                items = items.filter(i => i.id !== id);
+                save();
+            }
+        }
+
+        function render() {
+            const list = document.getElementById('itemList');
+            const tag = assocInput.value || 'your-tag-22';
+            list.innerHTML = '';
+
+            if (items.length === 0) {
+                list.innerHTML = '<p class="text-center text-gray-400 py-10 col-span-full">登録された商品はありません</p>';
+                return;
+            }
+
+            items.forEach(item => {
+                const amazonUrl = `https://www.amazon.co.jp/dp/${item.asin}/?tag=${tag}`;
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-gray-800">${item.name}</h3>
+                            <button onclick="deleteItem(${item.id})" class="text-gray-300 hover:text-red-500 text-lg leading-none">×</button>
+                        </div>
+                        <div class="text-[10px] text-gray-400 space-y-1 mb-4">
+                            <p>前回: ${item.lastBought} / サイクル: ${item.cycle}日</p>
+                        </div>
+                    </div>
+                    <a href="${amazonUrl}" target="_blank" onclick="updateDate(${item.id})" class="block text-center border-2 border-orange-400 text-orange-500 py-2 rounded-lg font-bold text-sm hover:bg-orange-400 hover:text-white transition">
+                        Amazonで再注文
+                    </a>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function updateDate(id) {
+            const item = items.find(i => i.id === id);
+            if(item) item.lastBought = new Date().toLocaleDateString();
+            localStorage.setItem('amazonStocks', JSON.stringify(items));
+            setTimeout(render, 1000);
+        }
+
+        // サービスワーカー登録
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(reg => console.log('PWA Ready'));
+            });
+        }
+
+        render();
+    </script>
+</body>
+</html>

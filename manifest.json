@@ -1,0 +1,16 @@
+{
+  "name": "Amazon Stock Manager",
+  "short_name": "在庫マネ",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F9FAFB",
+  "theme_color": "#232F3E",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3081/3081840.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
