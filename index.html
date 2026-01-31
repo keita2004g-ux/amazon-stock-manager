@@ -15,7 +15,7 @@
 </head>
 <body class="bg-[#f0f2f2] min-h-screen flex flex-col font-sans text-gray-900">
 
-    <header class="amazon-dark text-white p-4 sticky top-0 z-50 shadow-lg">
+    <header class="amazon-dark text-white p-4 sticky top-0 z-50 shadow-lg text-left">
         <div class="container mx-auto max-w-lg flex justify-between items-center">
             <h1 class="text-xl font-black tracking-tight flex items-center gap-2">
                 <span class="text-2xl">🛒</span> リピ買い管理
@@ -26,50 +26,50 @@
 
     <main class="container mx-auto p-4 max-w-lg flex-grow">
         
-        <div class="bg-white p-6 rounded-[2rem] card-shadow mb-6 border border-white">
-            <h2 class="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
-                🔎 Amazonで商品を見つける
-            </h2>
+        <div class="bg-white p-6 rounded-[2rem] card-shadow mb-6 border border-white text-left">
+            <h2 class="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">🔎 商品を見つける</h2>
             <div class="flex gap-2">
-                <input type="text" id="searchQuery" placeholder="商品名を入力..." 
-                       class="flex-1 border-2 border-gray-50 p-3 rounded-xl text-sm outline-none input-focus bg-gray-50">
-                <button onclick="quickSearch()" class="amazon-orange text-white px-5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition">
-                    検索
-                </button>
+                <input type="text" id="searchQuery" placeholder="商品名で検索..." class="flex-1 border-2 border-gray-50 p-3 rounded-xl text-sm outline-none input-focus bg-gray-50">
+                <button onclick="quickSearch()" class="amazon-orange text-white px-5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition">検索</button>
             </div>
-            <p class="text-[10px] text-gray-400 mt-3 ml-1 leading-relaxed text-left">
-                ※検索結果から商品を選び、「共有リンク」をコピーして下のフォームに貼り付けてください。
-            </p>
         </div>
 
-        <div class="bg-white p-6 rounded-[2rem] card-shadow mb-8 border border-white">
-            <h2 class="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">📌 リストに登録する</h2>
+        <div class="bg-white p-6 rounded-[2rem] card-shadow mb-8 border border-white text-left">
+            <h2 class="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">📌 リストに登録</h2>
             <div class="space-y-4 text-sm">
-                <input type="text" id="amazonUrl" placeholder="コピーしたURLをペースト" class="w-full border-2 border-gray-50 p-4 rounded-2xl outline-none input-focus bg-gray-50 transition-all">
-                <input type="text" id="itemName" placeholder="名前（例：いつものお茶）" class="w-full border-2 border-gray-50 p-4 rounded-2xl outline-none input-focus bg-gray-50 transition-all">
+                <div>
+                    <label class="text-[10px] text-gray-400 font-bold ml-2">URLまたはASIN</label>
+                    <input type="text" id="amazonUrl" placeholder="URLをペースト (ASIN直接入力も可)" class="w-full border-2 border-gray-50 p-4 rounded-2xl outline-none input-focus bg-gray-50 transition-all">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-400 font-bold ml-2">商品名</label>
+                    <input type="text" id="itemName" placeholder="例：いつもの炭酸水" class="w-full border-2 border-gray-50 p-4 rounded-2xl outline-none input-focus bg-gray-50 transition-all">
+                </div>
                 <textarea id="itemMemo" placeholder="メモ（任意）" class="w-full border-2 border-gray-50 p-4 rounded-2xl outline-none input-focus bg-gray-50 h-20 shadow-inner"></textarea>
                 <button onclick="addItem()" class="w-full amazon-orange text-white font-black py-4 rounded-2xl shadow-md active:scale-[0.98] transition-all text-lg">追加する</button>
             </div>
         </div>
 
+        <div class="flex items-center justify-between mb-4 px-4">
+            <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest italic">My リピ買いリスト</h2>
+            <span id="itemCount" class="text-[10px] bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full font-bold">0 items</span>
+        </div>
         <div id="itemList" class="grid gap-4 grid-cols-1 mb-12"></div>
 
-        <div class="bg-white p-8 rounded-[2rem] card-shadow mb-12 border border-white">
-            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">📖 使い方ガイド</h2>
-            <div class="space-y-4 text-sm text-gray-600 leading-relaxed text-left">
-                <p>1. 上の検索窓からAmazonで商品を探します。</p>
-                <p>2. 商品ページの「共有」ボタンから<span class="font-bold text-orange-600 underline text-left">リンクをコピー</span>します。</p>
-                <p>3. コピーしたURLを「リストに登録」に貼り付けて保存！</p>
-            </div>
+        <div class="bg-white p-8 rounded-[2rem] card-shadow mb-12 border border-white text-left text-sm text-gray-600 leading-relaxed">
+            <h2 class="text-lg font-black text-gray-800 mb-4 flex items-center gap-2">📖 使い方</h2>
+            <p>1. Amazonで商品の「共有」から<span class="font-bold text-orange-600 underline text-left">リンクをコピー</span></p>
+            <p>2. 上のフォームに貼り付けて保存</p>
+            <p>※上級者向け：ASIN（10桁のコード）を直接入力しても登録できます。</p>
         </div>
 
-        <div class="px-4 mb-4"><h2 class="text-sm font-black text-gray-400 uppercase tracking-widest italic text-left">管理人のリピ買い品</h2></div>
+        <div class="px-4 mb-4 text-left"><h2 class="text-sm font-black text-gray-400 uppercase tracking-widest italic">管理人のリピ買い品</h2></div>
         <div id="adminPicks" class="grid gap-4 grid-cols-1"></div>
     </main>
 
     <footer class="p-8 text-center text-gray-400">
         <div class="max-w-xs mx-auto space-y-4 text-[10px]">
-            <p class="font-medium leading-relaxed">Amazonのアソシエイトとして、repigai-logは適格販売により収入を得ています。</p>
+            <p class="font-medium leading-relaxed italic">Amazonのアソシエイトとして、repigai-logは適格販売により収入を得ています。</p>
             <p>&copy; 2026 リピ買い管理 / repigai-22</p>
         </div>
     </footer>
@@ -77,33 +77,39 @@
     <script>
         const MY_STORE_ID = 'repigai-22';
         const RECOMMENDED_ITEMS = [
-            { id: 'rec1', name: "Amazon ナチュラルミネラルウォーター 500ml×36本", asin: "B09SL7R5CM", memo: "日常使いにおすすめ。" },
-            { id: 'rec2', name: "ウィルキンソン 強炭酸 500ml×24本", asin: "B07Z4S81ZQ", memo: "お酒の割り材にも最適です。" }
+            { id: 'rec1', name: "SOLIMO 天然水 2L×9本", asin: "B07H7S869L", memo: "ローリングストックに最適。" },
+            { id: 'rec2', name: "ウィルキンソン 強炭酸 500ml", asin: "B073Z9775X", memo: "ラベルレスは捨てるのが楽！" }
         ];
 
         let items = JSON.parse(localStorage.getItem('amazonStocks')) || [];
 
-        // クイック検索関数
         function quickSearch() {
             const q = document.getElementById('searchQuery').value;
             if(!q) return alert('商品名を入力してください');
             window.open(`https://www.amazon.co.jp/s?k=${encodeURIComponent(q)}&tag=${MY_STORE_ID}`, '_blank');
         }
 
-        // ASIN抽出
-        function extractASIN(url) {
-            if (!url) return null;
-            const patterns = [
-                /\/(?:dp|gp\/product|exec\/obidos\/asin)\/([A-Z0-9]{10})/i,
-                /(?:asin=)([A-Z0-9]{10})/i,
-                /\/d\/([A-Z0-9]{10})/i
+        // 🛠️ スマホURL解析 & ASIN入力対応強化
+        function extractASIN(input) {
+            if (!input) return null;
+            const text = input.trim();
+
+            // 1. URLからASINを探す（標準URL, 短縮URL, モバイルURLすべてに対応）
+            const urlPatterns = [
+                /\/(?:dp|gp\/product|exec\/obidos\/asin|d)\/([A-Z0-9]{10})/i,
+                /(?:asin=)([A-Z0-9]{10})/i
             ];
-            for (let pattern of patterns) {
-                const match = url.match(pattern);
-                if (match) return match[1];
+            
+            for (let pattern of urlPatterns) {
+                const match = text.match(pattern);
+                if (match) return match[1].toUpperCase();
             }
-            const cleanText = url.trim();
-            if (cleanText.length === 10 && /^[A-Z0-9]{10}$/i.test(cleanText)) return cleanText.toUpperCase();
+
+            // 2. 裏機能: ASIN（10桁の英数字）を直接入力した場合
+            if (text.length === 10 && /^[A-Z0-9]{10}$/i.test(text)) {
+                return text.toUpperCase();
+            }
+            
             return null;
         }
 
@@ -113,43 +119,62 @@
             const memo = document.getElementById('itemMemo').value;
             const asin = extractASIN(urlInput);
 
-            if (!asin) return alert('URLが正しくありません。');
-            if (!name) return alert('名前を入力してください。');
+            if (!asin) return alert('有効なAmazon URLまたはASINを入力してください。');
+            if (!name) return alert('商品名を入力してください。');
 
             items.unshift({ id: Date.now(), name, asin, memo, lastBought: new Date().toLocaleDateString() });
             localStorage.setItem('amazonStocks', JSON.stringify(items));
             render();
             document.getElementById('amazonUrl').value = '';
             document.getElementById('itemName').value = '';
+            document.getElementById('itemMemo').value = '';
         }
 
         function createCard(item, isPersistent = false) {
-            // エラーを回避する確実なURL構造
             const amazonUrl = `https://www.amazon.co.jp/dp/${item.asin}?tag=${MY_STORE_ID}`;
             const keepaUrl = `https://keepa.com/#!product/1-${item.asin}`;
             
             return `
-                <div class="bg-white p-6 rounded-[2rem] card-shadow border border-white text-left">
+                <div class="bg-white p-6 rounded-[2rem] card-shadow border border-white text-left relative">
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="font-black text-gray-800 text-lg leading-tight">${item.name}</h3>
-                        ${!isPersistent ? `<button onclick="deleteItem(${item.id})" class="text-gray-300">✕</button>` : ''}
+                        ${!isPersistent ? `<button onclick="deleteItem(${item.id})" class="text-gray-300 hover:text-red-400 transition-colors">✕</button>` : ''}
                     </div>
-                    ${item.lastBought ? `<p class="text-[9px] font-bold text-blue-400 mb-4 uppercase">Last: ${item.lastBought}</p>` : ''}
-                    ${item.memo ? `<p class="bg-gray-50 text-gray-500 text-[11px] p-4 rounded-2xl mb-5 border border-gray-100">📝 ${item.memo}</p>` : ''}
+                    ${item.lastBought ? `<p class="text-[9px] font-bold text-blue-400 mb-4 uppercase">前回購入日: ${item.lastBought}</p>` : ''}
+                    ${item.memo ? `<p class="bg-gray-50 text-gray-500 text-[11px] p-4 rounded-2xl mb-5 border border-gray-100 italic">📝 ${item.memo}</p>` : ''}
                     <div class="grid grid-cols-2 gap-3">
-                        <a href="${keepaUrl}" target="_blank" class="flex items-center justify-center border-2 border-gray-100 text-gray-400 py-3 rounded-2xl text-[10px] font-bold uppercase">価格推移</a>
-                        <a href="${amazonUrl}" target="_blank" class="flex items-center justify-center amazon-orange text-white py-3 rounded-2xl text-sm font-black shadow-lg">購入する</a>
+                        <a href="${keepaUrl}" target="_blank" class="flex items-center justify-center border-2 border-gray-100 text-gray-400 py-3 rounded-2xl text-[10px] font-bold uppercase active:scale-95 transition-all">価格推移</a>
+                        <a href="${amazonUrl}" target="_blank" onclick="updateDate(${item.id})" class="flex items-center justify-center amazon-orange text-white py-3 rounded-2xl text-sm font-black shadow-lg shadow-orange-100 active:scale-95 transition-all">購入する</a>
                     </div>
                 </div>
             `;
         }
 
+        // 購入ボタンを押したときに日付を更新する機能
+        window.updateDate = function(id) {
+            const index = items.findIndex(i => i.id === id);
+            if (index !== -1) {
+                items[index].lastBought = new Date().toLocaleDateString();
+                localStorage.setItem('amazonStocks', JSON.stringify(items));
+                setTimeout(render, 1000); // 1秒後に再描画
+            }
+        }
+
         function render() {
-            document.getElementById('itemList').innerHTML = items.map(item => createCard(item)).join('');
+            document.getElementById('itemCount').innerText = `${items.length} items`;
+            document.getElementById('itemList').innerHTML = items.length 
+                ? items.map(item => createCard(item)).join('') 
+                : '<div class="text-center py-10 text-gray-300 text-[10px] font-bold uppercase tracking-widest border-2 border-dashed border-gray-100 rounded-[2rem] bg-white">No Items</div>';
             document.getElementById('adminPicks').innerHTML = RECOMMENDED_ITEMS.map(item => createCard(item, true)).join('');
         }
 
-        function deleteItem(id) { if(confirm('削除しますか？')) { items = items.filter(i => i.id !== id); localStorage.setItem('amazonStocks', JSON.stringify(items)); render(); } }
+        function deleteItem(id) { 
+            if(confirm('リストから削除しますか？')) { 
+                items = items.filter(i => i.id !== id); 
+                localStorage.setItem('amazonStocks', JSON.stringify(items)); 
+                render(); 
+            } 
+        }
 
         render();
     </script>
